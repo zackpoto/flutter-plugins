@@ -22,6 +22,10 @@ When editing the `Info.plist` file manually, the entries needed are:
 </array>
 ```
 ## Example Usage (Audio Streaming)
+See the file `example/lib/main.dart` for a fully fledged example app using the plugin.
+
+The essence of the audio streaming functionality can be summed up by the following code:
+
 ```dart
 bool recording = false;
 
