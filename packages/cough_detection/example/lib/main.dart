@@ -15,51 +15,28 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool _isRecording = false;
-  StreamSubscription<List<dynamic>> _noiseSubscription;
-  AudioStreamer _audioStreamer;
+  AudioStreamer streamer = AudioStreamer(debug: true);
 
   @override
   void initState() {
     super.initState();
   }
 
-  void onData(List<dynamic> audioData) {
-    this.setState(() {
-      if (!this._isRecording) {
-        this._isRecording = true;
-      }
+  void start() async {
+    bool started = await streamer.start();
+    setState(() {
+      _isRecording = started;
     });
-    print(audioData.toString());
   }
 
-  void startRecorder() async {
-    print('startRecorder()');
-    try {
-      _audioStreamer = new AudioStreamer();
-      _noiseSubscription = _audioStreamer.noiseStream.listen(onData);
-    } catch (err) {
-      print('startRecorder() error: $err');
-    }
-  }
+  void stop() async {
+    setState(() {
+      _isRecording = false;
+    });
 
-  void stopRecorder() async {
-    print('stopRecorder()');
-    try {
-      if (_noiseSubscription != null) {
-        _noiseSubscription.cancel();
-        _noiseSubscription = null;
-      }
-      this.setState(() {
-        this._isRecording = false;
-      });
-    } catch (err) {
-      print('stopRecorder() error: $err');
-    }
-  }
-
-  void printWrapped(String text) {
-    final pattern = new RegExp('.{1,800}'); // 800 is the size of each chunk
-    pattern.allMatches(text).forEach((match) => print(match.group(0)));
+    List data = await streamer.stop();
+    print('Recording was stopped.');
+    print('Number of data points: ${data.length}');
   }
 
   @override
@@ -75,19 +52,16 @@ class _MyAppState extends State<MyApp> {
                 style: Theme.of(context).textTheme.display1,
               ),
               Text(
-                _isRecording ? "Data is being printed..." : '',
+                _isRecording ? "Data is being recorded..." : '',
               ),
+
             ],
           ),
         ),
         floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              if (!this._isRecording) {
-                return this.startRecorder();
-              }
-              this.stopRecorder();
-            },
-            child: Icon(this._isRecording ? Icons.stop : Icons.mic)),
+          backgroundColor: _isRecording ? Colors.red : Colors.green,
+            onPressed: _isRecording ? stop : start,
+            child: _isRecording ? Icon(Icons.stop) : Icon(Icons.mic)),
       ),
     );
   }
