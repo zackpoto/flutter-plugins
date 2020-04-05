@@ -23,7 +23,7 @@ class CoughDetectionPlugin : FlutterPlugin, RequestPermissionsResultListener, Ev
     /// Constants
     private val eventChannelName = "cough_detection.eventChannel"
     private val sampleRate = 44100
-    private var bufferSize = 22050
+    private var bufferSize = 6400 * 2; /// Magical number!
     private val maxAmplitude = 32767 // same as 2^15
     private val logTag = "CoughDetectionPlugin"
 
