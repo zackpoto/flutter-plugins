@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:flutter/services.dart';
 import 'package:cough_detection/cough_detection.dart';
-import 'dart:math';
 
 void main() {
   runApp(new MyApp());
@@ -31,9 +28,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   void start() async {
-//    bool started = await _coughDetector.startDetection();
     try {
-      _coughDetector.coughStream.listen(onCough);
+      _coughDetector.startDetection(onCough);
       setState(() {
         _isRecording = true;
       });
@@ -47,15 +43,17 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       _isRecording = stopped;
     });
-    print('Recording was stopped.');
   }
 
   List<Widget> getContent() => <Widget>[
         Container(
             margin: EdgeInsets.all(25),
             child: Column(children: [
-              Container(child: Text(_isRecording ? "Detectopn: ON" : "Detection: OFF",
-                  style: TextStyle(fontSize: 25, color: Colors.blue)), margin: EdgeInsets.only(top: 20),)
+              Container(
+                child: Text(_isRecording ? "Detection: ON" : "Detection: OFF",
+                    style: TextStyle(fontSize: 25, color: Colors.blue)),
+                margin: EdgeInsets.only(top: 20),
+              )
             ])),
         Expanded(
           child: ListView.builder(

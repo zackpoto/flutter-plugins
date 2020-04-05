@@ -1,6 +1,6 @@
 # cough_detection
 
-cough_detection plugin
+Plugin for detecting and labelling coughs in real time.
 
 ## Permissions
 On *Android* you need to add a permission to `AndroidManifest.xml`:
@@ -21,23 +21,48 @@ When editing the `Info.plist` file manually, the entries needed are:
   <string>audio</string>
 </array>
 ```
-## Example Usage (Audio Streaming)
-See the file `example/lib/main.dart` for a fully fledged example app using the plugin.
 
-The essence of the audio streaming functionality can be summed up by the following code:
+## Data Model
+A cough can be either Dry or Productive (Wet) and happens at a given time. The Cough class therefore has the following fields:
 
 ```dart
-bool recording = false;
+DateTime date
+CoughType coughType
+```
 
-void start() async {
-  recording = await streamer.start();
+## Example Usage 
+See the file `example/lib/main.dart` for a fully fledged example app using the plugin.
+
+```dart
+CoughDetector _coughDetector = CoughDetector();
+bool _isRecording = false;
+List<Cough> _coughs = [];
+
+/// Handles new detected coughs
+void onCough(Cough cough) {
+  print('Received cough from stream: $cough');
+  setState(() {
+    _coughs.add(cough);
+  });
 }
 
+/// Starts detection
+void start() async {
+  try {
+    _coughDetector.startDetection(onCough);
+    setState(() {
+      _isRecording = true;
+    });
+  } catch (error) {
+    print(error);
+  }
+}
+
+/// Stops detection
 void stop() async {
-  recording = false;
-  List data = await streamer.stop();
-  
-  print('Recording was stopped.');
-  print('Number of data points: ${data.length}');
+  bool stopped = await _coughDetector.stopDetection();
+  setState(() {
+    _isRecording = stopped;
+  });
 }
 ```

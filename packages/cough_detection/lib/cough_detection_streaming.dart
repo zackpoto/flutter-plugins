@@ -9,11 +9,6 @@ class CoughDetector {
   double threshold = 0.85;
   StreamController<Cough> controller;
 
-  /// PUBLIC METHODS
-  /// - starting detection
-  Future<bool> startDetection() async {
-    return await audioStreamer.start(_onData);
-  }
 
   /// - stopping detection
   Future<bool> stopDetection() async {
@@ -21,12 +16,12 @@ class CoughDetector {
     return await audioStreamer.stop();
   }
 
-  /// - reading saved coughs
-//  Future<List<Cough>> readLocalCoughs() async {
-//    return await FileHandler.readCoughs();
-//  }
+  /// Start detection, i.e. listening to the cough stream
+  void startDetection(Function onData) {
+    _getCoughStream().listen(onData);
+  }
 
-  Stream<Cough> get coughStream {
+  Stream<Cough> _getCoughStream() {
     controller = StreamController<Cough>.broadcast(onListen: () async {
       await audioStreamer.start((List<double> audioBufferData) {
         /// Do stuff with data
@@ -60,42 +55,6 @@ class CoughDetector {
       });
     });
     return controller.stream;
-  }
-
-  /// Private internal methods for analyzing incoming data
-  void _onData(List<double> audioBufferData) {
-    /// Do stuff with data
-    int T = 2; // Recording segment length in seconds
-    int flutterBufferSize = 2 * audioBufferData.length * T;
-
-    flutterBuffer.addAll(audioBufferData);
-    if (flutterBuffer.length >= flutterBufferSize) {
-      print('Analyzing data of size: ${flutterBuffer.length}');
-      _analyzeData(flutterBuffer);
-      flutterBuffer = [];
-    }
-  }
-
-  void _analyzeData(List<double> data) async {
-    print('max amp: ${data.reduce(max)}');
-    print('min amp: ${data.reduce(min)}');
-
-    /// Thresholding
-    double maxAmp = data.reduce(max);
-    double minAmp = data.reduce(min);
-    minAmp = minAmp < 0 ? minAmp * -1 : minAmp;
-
-    /// Detection
-    if (maxAmp > threshold || minAmp > threshold) {
-      /// Detect cough type
-      var types = [CoughType.DRY, CoughType.PRODUCTIVE];
-      var coughTypeRandom = types[Random().nextInt(types.length)];
-      Cough cough = new Cough(DateTime.now(), coughTypeRandom);
-      print('Cough detected: [$cough]');
-
-      /// Store on device
-//      FileHandler.writeCoughToFile(cough);
-    }
   }
 }
 
