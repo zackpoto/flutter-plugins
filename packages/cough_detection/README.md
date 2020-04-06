@@ -1,4 +1,4 @@
-# cough_detection
+# Cough Detection Flutter Plugin
 
 Plugin for detecting and labelling coughs in real time.
 
