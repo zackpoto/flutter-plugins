@@ -3,12 +3,18 @@
 Plugin for detecting and labelling coughs in real time.
 
 ## Permissions
-On *Android* you need to add a permission to `AndroidManifest.xml`:
+
+### Android
+
+On Android you need to add a permission to `AndroidManifest.xml`:
+
 ```xml
 <uses-permission android:name="android.permission.RECORD_AUDIO" />
 ```
 
-On *iOS* enable the following:
+### iOS
+
+On iOS enable the following:
 * Capabilities > Background Modes > _Audio, AirPlay and Picture in Picture_
 * In the Runner Xcode project edit the _Info.plist_ file. Add an entry for _'Privacy - Microphone Usage Description'_
 
