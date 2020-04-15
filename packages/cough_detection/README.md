@@ -1,20 +1,14 @@
-# Cough Detection Flutter Plugin
+# cough_detection
 
 Plugin for detecting and labelling coughs in real time.
 
 ## Permissions
-
-### Android
-
-On Android you need to add a permission to `AndroidManifest.xml`:
-
+On *Android* you need to add a permission to `AndroidManifest.xml`:
 ```xml
 <uses-permission android:name="android.permission.RECORD_AUDIO" />
 ```
 
-### iOS
-
-On iOS enable the following:
+On *iOS* enable the following:
 * Capabilities > Background Modes > _Audio, AirPlay and Picture in Picture_
 * In the Runner Xcode project edit the _Info.plist_ file. Add an entry for _'Privacy - Microphone Usage Description'_
 

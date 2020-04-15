@@ -12,6 +12,12 @@ dependencies:
     sdk: flutter
   permission_handler: ^4.4.0
   path_provider: ^1.6.5
+  spectrogram: 
+    path: ../dependencies/flutter_spectogram
+  linalg: ^0.3.2
+  tflite: 
+    path: ../dependencies/tflite-1.0.5
+  image: ^2.1.4
 
 dev_dependencies:
   flutter_test:
@@ -31,7 +37,7 @@ flutter:
     pluginClass: CoughDetectionPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
-  # assets:
+
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
   #
