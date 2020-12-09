@@ -6,6 +6,7 @@ class WeatherFactory {
   Language language = Language.ENGLISH;
   static const String FIVE_DAY_FORECAST = 'forecast';
   static const String CURRENT_WEATHER = 'weather';
+  static const String ONE_CALL = 'onecall';
   static const int STATUS_OK = 200;
 
   WeatherFactory(this._apiKey, {this.language});
@@ -48,6 +49,19 @@ class WeatherFactory {
     try {
       Map<String, dynamic> jsonForecast =
           await _sendRequest(FIVE_DAY_FORECAST, lat: latitude, lon: longitude);
+      forecast = _parseForecast(jsonForecast);
+    } catch (exception) {
+      print(exception);
+    }
+    return forecast;
+  }
+  
+  Future<List<Weather>> sevenDayForecastByLocation(
+      double latitude, double longitude) async {
+    List<Weather> forecast = new List<Weather>();
+    try {
+      Map<String, dynamic> jsonForecast =
+          await _sendRequest(ONE_CALL, lat: latitude, lon: longitude);
       forecast = _parseForecast(jsonForecast);
     } catch (exception) {
       print(exception);
@@ -100,6 +114,9 @@ class WeatherFactory {
     if (cityName != null) {
       url += 'q=$cityName&';
     } else {
+      if (tag == ONE_CALL) {
+        url += 'units=imperial&exclude=hourly,minutely&';
+      }
       url += 'lat=$lat&lon=$lon&';
     }
 
